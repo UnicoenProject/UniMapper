@@ -1,6 +1,9 @@
 # for Maven
 target
 
+# for Maven
+bin
+
 *.class
 
 # Package Files #
