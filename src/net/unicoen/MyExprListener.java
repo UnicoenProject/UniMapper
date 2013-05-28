@@ -4,10 +4,16 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-import grammar.ExprBaseListener;
-import grammar.ExprParser;
+import parser.ExprBaseListener;
+import parser.ExprParser;
 
 public class MyExprListener extends ExprBaseListener {
+  private ExprParser _parser;
+
+  public MyExprListener(ExprParser parser) {
+    _parser = parser;
+  }
+
   @Override
   public void enterProg(ExprParser.ProgContext ctx) {
     System.out.println(ctx);

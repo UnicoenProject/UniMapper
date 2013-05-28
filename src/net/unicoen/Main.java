@@ -1,15 +1,25 @@
 package net.unicoen;
 
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
+
+import parser.JavaLexer;
+import parser.JavaParser;
+
 public class Main {
 
   /**
    * @param args
    */
   public static void main(String[] args) {
-    ExprLexer lexer = new ExprLexer(input);
+    CharStream input = new ANTLRInputStream("10+(4*5)-5\n");
+    JavaLexer lexer = new JavaLexer(input);
     CommonTokenStream tokens = new CommonTokenStream(lexer);
     JavaParser parser = new JavaParser(tokens);
-    ParserRuleContext<Token> tree = parser.compilationUnit(); // parse
+    ParserRuleContext tree = parser.compilationUnit(); // parse
     ParseTreeWalker walker = new ParseTreeWalker(); // create standard walker
     ExtractInterfaceListener extractor = new ExtractInterfaceListener(parser);
     walker.walk(extractor, tree); // initiate walk of tree with listener
