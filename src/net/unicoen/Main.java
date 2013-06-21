@@ -23,6 +23,7 @@ public class Main {
     ParseTreeWalker walker = new ParseTreeWalker(); // create standard walker
     ExtractInterfaceListener extractor = new ExtractInterfaceListener(parser);
     walker.walk(extractor, tree); // initiate walk of tree with listener
+    System.out.println(UniTree.getTopNode().getCurrent().getClass().getName());
   }
 
 }
