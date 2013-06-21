@@ -1,6 +1,7 @@
 package net.unicoen;
 
-import org.antlr.v4.runtime.TokenStream;
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 import parser.JavaBaseListener;
 import parser.JavaParser;
@@ -14,24 +15,37 @@ public class ExtractInterfaceListener extends JavaBaseListener {
 
   /** Listen to matches of classDeclaration */
   @Override
-  public void enterNormalClassDeclaration(JavaParser.NormalClassDeclarationContext ctx) {
-    System.out.println("interface I" + ctx.Identifier() + " {");
+  public void enterEveryRule(ParserRuleContext ctx) {
+    String ruleOmittedName = getRuleName(ctx);
+    System.out.println("<" + ruleOmittedName + ">");
+    //if (ctx.getChildCount() == 1) {
+      //ParseTree t = ctx.getChild(0);
+      //System.out.println("  " + ctx.getText());
+    //}
   }
 
-  @Override
-  public void exitNormalClassDeclaration(JavaParser.NormalClassDeclarationContext ctx) {
-    System.out.println("}");
+  private String getRuleName(ParserRuleContext ctx) {
+    String ruleClass = ctx.getClass().getName();
+    String ruleName = ruleClass.split("\\$")[1];
+    String ruleOmittedName = ruleName.substring(0, ruleName.length() - 7);
+    return ruleOmittedName;
   }
-
-  /** Listen to matches of methodDeclaration */
+  
   @Override
-  public void enterMemberDecl(JavaParser.MemberDeclContext ctx) {
-    TokenStream tokens = parser.getTokenStream(); // need parser to get tokens
-    String type = "void";
-    if (ctx.Identifier() != null) {
-      type = tokens.getText(ctx.Identifier().getSourceInterval());
+  public void exitEveryRule(ParserRuleContext ctx) {
+    String ruleOmittedName = getRuleName(ctx);
+    System.out.println("</" + ruleOmittedName + ">");
+  }
+  
+  @Override
+  public void visitTerminal(TerminalNode node) {
+    int terminalNodeType = node.getSymbol().getType();
+    if (terminalNodeType == -1) {
+      return;
     }
-//    String args = tokens.getText(ctx.formalParameters());
-//    System.out.println("\t" + type + " " + ctx.Identifier() + args + ";");
+    String terminalNodeName = parser.getTokenNames()[terminalNodeType];
+    String startTag = "<" + terminalNodeName + ">";
+    String endTag = "</" + terminalNodeName + ">";
+    System.out.println(startTag + node.getText() + endTag);
   }
 }
