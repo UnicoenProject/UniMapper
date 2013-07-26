@@ -1,10 +1,10 @@
 # for Maven
 target
-
-# for Maven
 bin
-
 *.class
+.classpath
+.project
+.settings
 
 # Package Files #
 *.jar
