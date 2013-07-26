@@ -1,12 +1,16 @@
 package net.unicoen;
 
-import org.antlr.v4.runtime.TokenStream;
+import java.util.Stack;
+
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 import parser.JavaBaseListener;
 import parser.JavaParser;
 
 public class ExtractInterfaceListener extends JavaBaseListener {
   JavaParser parser;
+  Stack<UniTree> stack = new Stack<UniTree>();
 
   public ExtractInterfaceListener(JavaParser parser) {
     this.parser = parser;
@@ -14,24 +18,23 @@ public class ExtractInterfaceListener extends JavaBaseListener {
 
   /** Listen to matches of classDeclaration */
   @Override
-  public void enterNormalClassDeclaration(JavaParser.NormalClassDeclarationContext ctx) {
-    System.out.println("interface I" + ctx.Identifier() + " {");
+  public void enterEveryRule(ParserRuleContext ctx) {
+    UniTree node = new UniTree(ctx);
+    stack.push(node);
   }
 
   @Override
-  public void exitNormalClassDeclaration(JavaParser.NormalClassDeclarationContext ctx) {
-    System.out.println("}");
-  }
-
-  /** Listen to matches of methodDeclaration */
-  @Override
-  public void enterMemberDecl(JavaParser.MemberDeclContext ctx) {
-    TokenStream tokens = parser.getTokenStream(); // need parser to get tokens
-    String type = "void";
-    if (ctx.Identifier() != null) {
-      type = tokens.getText(ctx.Identifier().getSourceInterval());
+  public void exitEveryRule(ParserRuleContext ctx) {
+    UniTree node = stack.pop();
+    if (!stack.isEmpty()) {
+      UniTree parent = stack.peek();
+      node.setParent(parent);
+      parent.addChild(node);
     }
-//    String args = tokens.getText(ctx.formalParameters());
-//    System.out.println("\t" + type + " " + ctx.Identifier() + args + ";");
+    else UniTree.setTopNode(node);
+  }
+
+  @Override
+  public void visitTerminal(TerminalNode node) {
   }
 }
