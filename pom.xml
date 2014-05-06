@@ -7,14 +7,14 @@
   <name>UniMapper</name>
 
   <properties>
-    <maven.compiler.target>1.6</maven.compiler.target>
-    <maven.compiler.source>1.6</maven.compiler.source>
+    <maven.compiler.target>1.7</maven.compiler.target>
+    <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <encoding>UTF-8</encoding>
-    <xtend.version>2.4.2</xtend.version>
-    <antlr.version>4.1</antlr.version>
+    <xtend.version>2.5.4</xtend.version>
+    <antlr.version>4.2.2</antlr.version>
     <antlr4.visitor>true</antlr4.visitor>
     <antlr4.listener>true</antlr4.listener>
   </properties>
@@ -73,6 +73,7 @@
   <build>
     <sourceDirectory>src</sourceDirectory>
     <outputDirectory>bin</outputDirectory>
+    <testSourceDirectory>test</testSourceDirectory>
 
     <plugins>
       <plugin>
@@ -92,7 +93,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
-        <version>1.7</version>
+        <version>1.8</version>
         <executions>
           <execution>
             <phase>generate-sources</phase>
@@ -178,7 +179,9 @@
                     </goals>
                   </pluginExecutionFilter>
                   <action>
-                    <execute></execute>
+                    <execute>
+                      <runOnIncremental>true</runOnIncremental>
+                    </execute>
                   </action>
                 </pluginExecution>
               </pluginExecutions>
